@@ -1,6 +1,5 @@
 package repository.interfaces;
 
-
 import domain.entities.Component;
 
 import java.util.List;

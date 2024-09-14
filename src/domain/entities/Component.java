@@ -1,8 +1,6 @@
 package domain.entities;
 
-public abstract class Component {
-
-
+public class Component {
     private int id;
     private String name;
     private String componentType;

@@ -1,8 +1,8 @@
-package repository.implementation;
+package repository;
+
 
 import domain.entities.Client;
 import repository.interfaces.ClientInterface;
-
 
 import java.util.List;
 import java.util.Optional;
