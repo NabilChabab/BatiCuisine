@@ -1,6 +1,4 @@
-package repository.implementation;
-
-
+package repository;
 
 import domain.entities.Component;
 import repository.interfaces.ComponentInterface;
@@ -21,7 +19,7 @@ public class ComponentRepository implements ComponentInterface<Component> {
 
     @Override
     public List<Component> findAll() {
-        return List.of();
+        return null;
     }
 
     @Override

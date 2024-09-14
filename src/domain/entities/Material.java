@@ -1,31 +1,29 @@
 package domain.entities;
 
-public class Material extends Component {
-
-
-    private double unitCoste;
+public class Material extends Component{
+    private double unitCost;
     private double quantity;
     private double transportCost;
-    private double coefficientQuality;
+    private double qualityCoefficient;
 
 
-    public Material(String name, String componentType, double vatRate, double unitCoste, double quantity, double transportCost, double coefficientQuality) {
+    public Material(String name, String componentType, double vatRate, double unitCost, double quantity, double transportCost, double qualityCoefficient) {
         super(name, componentType, vatRate);
-        this.unitCoste = unitCoste;
+        this.unitCost = unitCost;
         this.quantity = quantity;
         this.transportCost = transportCost;
-        this.coefficientQuality = coefficientQuality;
+        this.qualityCoefficient = qualityCoefficient;
     }
 
     public Material() {
     }
 
-    public double getUnitCoste() {
-        return unitCoste;
+    public double getunitCost() {
+        return unitCost;
     }
 
-    public void setUnitCoste(double unitCoste) {
-        this.unitCoste = unitCoste;
+    public void setunitCost(double unitCost) {
+        this.unitCost = unitCost;
     }
 
     public double getQuantity() {
@@ -44,21 +42,21 @@ public class Material extends Component {
         this.transportCost = transportCost;
     }
 
-    public double getCoefficientQuality() {
-        return coefficientQuality;
+    public double getqualityCoefficient() {
+        return qualityCoefficient;
     }
 
-    public void setCoefficientQuality(double coefficientQuality) {
-        this.coefficientQuality = coefficientQuality;
+    public void setqualityCoefficient(double qualityCoefficient) {
+        this.qualityCoefficient = qualityCoefficient;
     }
 
     @Override
     public String toString() {
         return "Material{" +
-                "unitCoste=" + unitCoste +
+                "unitCost=" + unitCost +
                 ", quantity=" + quantity +
                 ", transportCost=" + transportCost +
-                ", coefficientQuality=" + coefficientQuality +
+                ", qualityCoefficient=" + qualityCoefficient +
                 '}';
     }
 }
