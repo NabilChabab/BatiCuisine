@@ -27,7 +27,6 @@ public class Main {
             ProjectUi projectUi = new ProjectUi(projectService);
             projectUi.displayMenu();
 
-
         } catch (SQLException e) {
             System.out.println("Error: Unable to establish a database connection.");
             e.printStackTrace();
