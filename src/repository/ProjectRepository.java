@@ -1,5 +1,4 @@
-package repository.implementation;
-
+package repository;
 
 import domain.entities.Project;
 import repository.interfaces.ProjectInterface;

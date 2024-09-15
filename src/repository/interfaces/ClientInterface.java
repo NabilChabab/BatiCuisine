@@ -1,12 +1,11 @@
 package repository.interfaces;
 
-
 import domain.entities.Client;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ClientInterface <T extends Client>  extends CrudInterface<Client> {
+public interface ClientInterface <Client>  extends CrudInterface<Client> {
 
     @Override
     public Client save(Client client);

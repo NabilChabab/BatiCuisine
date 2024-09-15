@@ -3,12 +3,13 @@ package domain.entities;
 import javax.print.attribute.standard.Destination;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Client {
-    private int id;
+    private UUID id;
     private String name;
-    private String adress;
-    private String telephone;
+    private String address;
+    private String phone;
     private boolean isProfessional;
     private List<Project> listProjects;
 
@@ -20,11 +21,11 @@ public class Client {
         this.listProjects = listProjects;
     }
 
-    public Client(int id, String name, String adress, String telephone, boolean isProfessional) {
+    public Client(UUID id, String name, String address, String phone, boolean isProfessional) {
         this.id = id;
         this.name = name;
-        this.adress = adress;
-        this.telephone = telephone;
+        this.address = address;
+        this.phone = phone;
         this.isProfessional = isProfessional;
         listProjects=new ArrayList<>();
     }
@@ -33,11 +34,11 @@ public class Client {
         listProjects=new ArrayList<>();
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -49,20 +50,20 @@ public class Client {
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getaddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setaddress(String address) {
+        this.address = address;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getphone() {
+        return phone;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setphone(String phone) {
+        this.phone = phone;
     }
 
     public boolean isProfessional() {
@@ -78,8 +79,8 @@ public class Client {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", adress='" + adress + '\'' +
-                ", telephone='" + telephone + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
                 ", isProfessional=" + isProfessional +
                 '}';
     }

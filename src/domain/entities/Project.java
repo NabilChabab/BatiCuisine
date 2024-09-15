@@ -7,16 +7,16 @@ import java.util.List;
 
 public class Project {
     private int id;
-    private String nameProject;
+    private String projectName;
     private double profitMargin;
     private double totalCost;
     List<Component> listComponents;
     private ProjectStatus status;
     private Client client;
 
-    public Project(int id, String nameProject, double profitMargin, double totalCost,String status,Client client) {
+    public Project(int id, String projectname, double profitMargin, double totalCost,String status,Client client) {
         this.id = id;
-        this.nameProject = nameProject;
+        this.projectName = projectname;
         this.profitMargin = profitMargin;
         this.totalCost = totalCost;
         this.listComponents = listComponents;
@@ -53,27 +53,27 @@ public class Project {
         this.id = id;
     }
 
-    public String getNameProject() {
-        return nameProject;
+    public String getprojectname() {
+        return projectName;
     }
 
-    public void setNameProject(String nameProject) {
-        this.nameProject = nameProject;
+    public void setprojectname(String projectname) {
+        this.projectName = projectname;
     }
 
-    public double getProfitMargin() {
+    public double getprofitMargin() {
         return profitMargin;
     }
 
-    public void setProfitMargin(double profitMargin) {
+    public void setprofitMargin(double profitMargin) {
         this.profitMargin = profitMargin;
     }
 
-    public double getTotalCost() {
+    public double gettotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(double totalCost) {
+    public void settotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -89,7 +89,7 @@ public class Project {
     public String toString() {
         return "Project{" +
                 "id=" + id +
-                ", nameProject='" + nameProject + '\'' +
+                ", projectname='" + projectName + '\'' +
                 ", profitMargin=" + profitMargin +
                 ", totalCost=" + totalCost +
                 '}';
