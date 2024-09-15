@@ -1,6 +1,8 @@
 package config;
 
-import exeptions.DatabaseConnectionExeption;
+
+
+import exceptions.DatabaseConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +22,7 @@ public class Database {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Connected to the PostgreSQL server successfully.");
         } catch (SQLException e) {
-            throw new DatabaseConnectionExeption("Failed to connect to the PostgreSQL server.");
+            throw new DatabaseConnectionException("Error connecting to the database", e);
         }
     }
 
