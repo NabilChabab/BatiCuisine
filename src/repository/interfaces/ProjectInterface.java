@@ -1,5 +1,7 @@
 package repository.interfaces;
 
+import domain.entities.Client;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +20,7 @@ public interface ProjectInterface <Project> extends CrudInterface<Project>{
 
     @Override
     public boolean delete(Project entity);
+
+    public void saveClientProject(Client client, Project project);
+
 }
