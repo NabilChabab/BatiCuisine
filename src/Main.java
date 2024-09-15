@@ -1,8 +1,13 @@
 import config.Database;
 import domain.entities.Client;
+import domain.entities.Project;
+import domain.enums.ProjectStatus;
 import repository.ClientRepository;
+import repository.ProjectRepository;
 import service.ClientService;
+import service.ProjectService;
 import ui.ClientUi;
+import ui.ProjectUi;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,13 +21,12 @@ public class Main {
             // Initialize the database connection
             Connection connection = Database.getInstance().getConnection();
 
-            // Create repository and service instances
-            ClientRepository clientRepository = new ClientRepository(connection);
-            ClientService clientService = new ClientService(clientRepository);
+            ProjectRepository projectRepository = new ProjectRepository(connection);
+            ProjectService projectService = new ProjectService(projectRepository);
 
-            // Create and launch the UI
-            ClientUi clientUi = new ClientUi(clientService);
-            clientUi.showMenu();
+            ProjectUi projectUi = new ProjectUi(projectService);
+            projectUi.displayMenu();
+
 
         } catch (SQLException e) {
             System.out.println("Error: Unable to establish a database connection.");

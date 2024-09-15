@@ -80,7 +80,7 @@ public class ClientUi {
 
     private void findClientById() {
         System.out.println("Enter client ID:");
-        UUID clientId = UUID.fromString(scanner.nextLine());
+        int clientId = scanner.nextInt();
 
         // Create a Client object with the ID to pass to findById
         Client clientWithId = new Client();
@@ -113,16 +113,8 @@ public class ClientUi {
     }
 
     private void updateClient() {
-        System.out.println("Enter the client UUID to update:");
-        String uuidString = scanner.nextLine().trim();
-        UUID clientId;
-
-        try {
-            clientId = UUID.fromString(uuidString);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid UUID format. Please try again.");
-            return;
-        }
+        System.out.println("Enter the client ID to update:");
+        int clientId = scanner.nextInt();
 
         Client clientToFind = new Client();
         clientToFind.setId(clientId);
@@ -165,15 +157,8 @@ public class ClientUi {
 
     private void deleteClient() {
         System.out.println("Enter the client ID to delete:");
-        String uuidString = scanner.nextLine().trim();
-        UUID clientId;
+        int clientId = scanner.nextInt();
 
-        try {
-            clientId = UUID.fromString(uuidString);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid UUID format. Please try again.");
-            return;
-        }
 
         Client client = new Client();
         client.setId(clientId);

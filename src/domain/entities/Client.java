@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Client {
-    private UUID id;
+    private int id;
     private String name;
     private String address;
     private String phone;
@@ -21,7 +21,7 @@ public class Client {
         this.listProjects = listProjects;
     }
 
-    public Client(UUID id, String name, String address, String phone, boolean isProfessional) {
+    public Client(int id, String name, String address, String phone, boolean isProfessional) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -34,11 +34,11 @@ public class Client {
         listProjects=new ArrayList<>();
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 

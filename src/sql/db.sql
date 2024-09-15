@@ -1,5 +1,4 @@
--- Table for Clients
-CREATE TABLE Clients (
+CREATE TABLE clients (
                          id SERIAL PRIMARY KEY,
                          name VARCHAR(255) NOT NULL,
                          address VARCHAR(255),
@@ -7,11 +6,9 @@ CREATE TABLE Clients (
                          isProfessional BOOLEAN NOT NULL
 );
 
--- Enumeration for Project Status
-CREATE TYPE projectStatus AS ENUM ('INPROGRESS', 'COMPLETED', 'CANCELLED');
+CREATE TYPE projectStatus AS ENUM ('INPROGRESS', 'FINISHED', 'CANCELLED');
 
--- Table for Projects
-CREATE TABLE Projects (
+CREATE TABLE projects (
                           id SERIAL PRIMARY KEY,
                           projectName VARCHAR(255) NOT NULL,
                           profitMargin DOUBLE PRECISION,
@@ -21,16 +18,14 @@ CREATE TABLE Projects (
                           FOREIGN KEY (client_id) REFERENCES Clients(id) ON DELETE CASCADE
 );
 
--- Table for Components
-CREATE TABLE Components (
+CREATE TABLE components (
                             id SERIAL PRIMARY KEY,
                             name VARCHAR(255) NOT NULL,
                             componentType VARCHAR(255),
                             vatRate DOUBLE PRECISION
 );
 
--- Table for Materials
-CREATE TABLE Materials (
+CREATE TABLE materials (
                            id SERIAL PRIMARY KEY,
                            component_id INT,
                            unitCost DOUBLE PRECISION,
@@ -40,8 +35,7 @@ CREATE TABLE Materials (
                            FOREIGN KEY (component_id) REFERENCES Components(id) ON DELETE CASCADE
 );
 
--- Table for Labor
-CREATE TABLE Labor (
+CREATE TABLE labor (
                        id SERIAL PRIMARY KEY,
                        component_id INT,
                        hourlyRate DOUBLE PRECISION,
@@ -50,8 +44,7 @@ CREATE TABLE Labor (
                        FOREIGN KEY (component_id) REFERENCES Components(id) ON DELETE CASCADE
 );
 
--- Table for Quotes
-CREATE TABLE Quotes (
+CREATE TABLE quotes (
                         id SERIAL PRIMARY KEY,
                         estimatedAmount DOUBLE PRECISION,
                         issueDate DATE,

@@ -21,4 +21,6 @@ public interface ClientInterface <Client>  extends CrudInterface<Client> {
 
     @Override
     public boolean delete(Client client);
+
+    public List<Client> findByName(String name);
 }
