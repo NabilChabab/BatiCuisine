@@ -3,9 +3,10 @@ package domain.entities;
 import javax.print.attribute.standard.Destination;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Client {
-    private int id;
+    private UUID id;
     private String name;
     private String address;
     private String phone;
@@ -20,7 +21,7 @@ public class Client {
         this.listProjects = listProjects;
     }
 
-    public Client(int id, String name, String address, String phone, boolean isProfessional) {
+    public Client(UUID id, String name, String address, String phone, boolean isProfessional) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -33,11 +34,11 @@ public class Client {
         listProjects=new ArrayList<>();
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
