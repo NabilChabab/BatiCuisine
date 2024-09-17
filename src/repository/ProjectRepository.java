@@ -43,7 +43,7 @@ public class ProjectRepository implements ProjectInterface {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                project.setId(resultSet.getInt("id"));  // Set the generated id
+                project.setId(resultSet.getInt("id"));
                 System.out.println("Project saved with ID: " + project.getId());
                 return project;
             } else {
@@ -65,13 +65,12 @@ public class ProjectRepository implements ProjectInterface {
             Client savedClient = clientRepository.save(client);
             project.setClient(savedClient);
 
-            Project savedProject = save(project);
 
             Component materialComponent = new Component();
             materialComponent.setName(material.getName());
             materialComponent.setComponentType("Material");
             materialComponent.setVatRate(material.getVatRate());
-            materialComponent.setProject(savedProject);
+            materialComponent.setProject(project);
 
             Component savedMaterialComponent = componentRepository.save(materialComponent);
 
@@ -82,7 +81,7 @@ public class ProjectRepository implements ProjectInterface {
             workforceComponent.setName(workForce.getName());
             workforceComponent.setComponentType("Workforce");
             workforceComponent.setVatRate(workForce.getVatRate());
-            workforceComponent.setProject(savedProject);
+            workforceComponent.setProject(project);
 
             Component savedWorkforceComponent = componentRepository.save(workforceComponent);
 

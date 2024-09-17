@@ -99,10 +99,9 @@ public class ProjectMenu {
             Project project = new Project(0, name, 0, 0, projectStatus.name(), surface, selectedClient);
             Project savedProject = projectService.save(project);
 
-            Material savedMaterial = materialMenu.addMaterial(savedProject);
-            WorkForce savedWorkForce = workForceMenu.addWorkForce(savedProject);
+            materialMenu.addMaterial(savedProject);
+            workForceMenu.addWorkForce(savedProject);
 
-            projectService.saveClientProject(selectedClient, savedProject, savedMaterial, savedWorkForce);
             System.out.println("✅ Project added successfully!\n");
             System.out.println(drawProjectTable(savedProject));
         } catch (Exception e) {
