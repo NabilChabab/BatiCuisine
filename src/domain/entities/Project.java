@@ -1,29 +1,35 @@
 package domain.entities;
 
+
 import domain.enums.ProjectStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 public class Project {
     private int id;
     private String projectName;
     private double profitMargin;
     private double totalCost;
-    List<Component> listComponents;
     private ProjectStatus status;
+    private double surface;
     private Client client;
+    List<Component> components;
 
-    public Project(int id, String projectname, double profitMargin, double totalCost,String status,Client client) {
+    public Project(int id, String projectName, double profitMargin, double totalCost, String status, double surface, Client client) {
         this.id = id;
-        this.projectName = projectname;
+        this.projectName = projectName;
         this.profitMargin = profitMargin;
         this.totalCost = totalCost;
-        this.listComponents = listComponents;
-        listComponents=new ArrayList<>();
-        this.status=ProjectStatus.valueOf(status);
-        this.client=client;
+        this.components = new ArrayList<>();
+        this.status = ProjectStatus.valueOf(status);
+        this.surface = surface;
+        this.client = client;
+
+    }
+
+    public Project() {
 
     }
 
@@ -43,8 +49,6 @@ public class Project {
         this.client = client;
     }
 
-    public Project() {
-    }
 
     public int getId() {
         return id;
@@ -54,43 +58,52 @@ public class Project {
         this.id = id;
     }
 
-    public String getprojectname() {
+    public String getProjectName() {
         return projectName;
     }
 
-    public void setprojectname(String projectname) {
-        this.projectName = projectname;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
-    public double getprofitMargin() {
+    public double getProfitMargin() {
         return profitMargin;
     }
 
-    public void setprofitMargin(double profitMargin) {
+    public void setProfitMargin(double profitMargin) {
         this.profitMargin = profitMargin;
     }
 
-    public double gettotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
 
-    public void settotalCost(double totalCost) {
+    public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
-    public List<Component> getListComponents() {
-        return listComponents;
+    public List<Component> getComponents() {
+        return components;
     }
 
-    public void setListComponents(List<Component> listComponents) {
-        this.listComponents = listComponents;
+    public void setComponents(List<Component> components) {
+        this.components = components;
+    }
+
+    public double getSurface() {
+
+        return surface;
+    }
+
+    public void setSurface(double surface) {
+        this.surface = surface;
     }
 
     @Override
     public String toString() {
         return "Project{" +
                 "id=" + id +
-                ", projectname='" + projectName + '\'' +
+                ", projectName='" + projectName + '\'' +
                 ", profitMargin=" + profitMargin +
                 ", totalCost=" + totalCost +
                 '}';

@@ -1,6 +1,7 @@
 package repository;
 
 
+
 import config.Database;
 import domain.entities.Client;
 import repository.interfaces.ClientInterface;
@@ -12,13 +13,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public class ClientRepository implements ClientInterface<Client> {
+public class ClientRepository implements ClientInterface {
 
     private Connection connection;
 
-    public ClientRepository(Connection connection) throws SQLException {
+    public ClientRepository() throws SQLException {
         this.connection = Database.getInstance().getConnection();
     }
 
@@ -27,15 +27,14 @@ public class ClientRepository implements ClientInterface<Client> {
         String query = "INSERT INTO clients (name, address, phone, isProfessional) VALUES (?, ?, ?, ?) RETURNING id";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, client.getName());
-            preparedStatement.setString(2, client.getaddress());
-            preparedStatement.setString(3, client.getphone());
+            preparedStatement.setString(2, client.getAddress());
+            preparedStatement.setString(3, client.getPhone());
             preparedStatement.setBoolean(4, client.isProfessional());
 
             try (ResultSet generatedKeys = preparedStatement.executeQuery()) {
                 if (generatedKeys.next()) {
                     int id = generatedKeys.getInt(1);
                     client.setId(id);
-                    System.out.println("Client with name " + client.getName() + " was successfully saved with ID " + id);
                 } else {
                     throw new SQLException("Creating client failed, no ID obtained.");
                 }
@@ -77,8 +76,8 @@ public class ClientRepository implements ClientInterface<Client> {
                 Client client = new Client();
                 client.setId(resultSet.getInt("id"));
                 client.setName(resultSet.getString("name"));
-                client.setaddress(resultSet.getString("address"));
-                client.setphone(resultSet.getString("phone"));
+                client.setAddress(resultSet.getString("address"));
+                client.setPhone(resultSet.getString("phone"));
                 client.setProfessional(resultSet.getBoolean("isProfessional"));
             }
             return clients;
@@ -93,8 +92,8 @@ public class ClientRepository implements ClientInterface<Client> {
         String sql = "UPDATE clients SET name = ?, address = ?, phone = ?, isProfessional = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, client.getName());
-            preparedStatement.setString(2, client.getaddress());
-            preparedStatement.setString(3, client.getphone());
+            preparedStatement.setString(2, client.getAddress());
+            preparedStatement.setString(3, client.getPhone());
             preparedStatement.setBoolean(4, client.isProfessional());
             preparedStatement.setInt(5, client.getId());
             preparedStatement.executeUpdate();
@@ -127,29 +126,30 @@ public class ClientRepository implements ClientInterface<Client> {
     }
 
     @Override
-    public List<Client> findByName(String name) {
-        List<Client> clients = new ArrayList<>();
+    public Optional<Client> findByName(String name) {
         String sql = "SELECT * FROM clients WHERE name = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Client client = mapResultSetToClient(rs);
-                clients.add(client);
+            if (rs.next()) {
+                return Optional.of( mapResultSetToClient(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return clients;
+        return Optional.empty();
     }
+
 
     private Client mapResultSetToClient(ResultSet rs) throws SQLException {
         Client client = new Client();
         client.setId(rs.getInt("id"));
         client.setName(rs.getString("name"));
-        client.setaddress(rs.getString("address"));
-        client.setphone(rs.getString("phone"));
+        client.setAddress(rs.getString("address"));
+        client.setPhone(rs.getString("phone"));
         client.setProfessional(rs.getBoolean("isProfessional"));
         return client;
     }
 }
+
+

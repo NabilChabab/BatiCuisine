@@ -1,14 +1,18 @@
 package service;
 
+
+
 import domain.entities.Client;
+import domain.entities.Material;
 import domain.entities.Project;
-import repository.ProjectRepository;
+import domain.entities.WorkForce;
+import repository.*;
+import utils.Validations;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectService {
-
+public class ProjectService{
     private final ProjectRepository projectRepository;
 
     public ProjectService(ProjectRepository projectRepository) {
@@ -17,10 +21,11 @@ public class ProjectService {
 
 
     public Project save(Project project) {
+        Validations.projectValidation(project);
         return this.projectRepository.save(project);
     }
 
-    public Boolean delete(Project project) {
+    public boolean delete(Project project) {
         return projectRepository.delete(project);
     }
 
@@ -36,7 +41,8 @@ public class ProjectService {
         return this.projectRepository.findById(project);
     }
 
-    public void saveClientProject(Client client, Project project) {
-        this.projectRepository.saveClientProject(client,project);
+    public void saveClientProject(Client client, Project project, Material material, WorkForce workForce) {
+        this.projectRepository.saveClientProject(client, project,material, workForce);
     }
+
 }
