@@ -1,9 +1,7 @@
 package domain.entities;
 
-import javax.print.attribute.standard.Destination;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Client {
     private int id;
@@ -11,15 +9,8 @@ public class Client {
     private String address;
     private String phone;
     private boolean isProfessional;
-    private List<Project> listProjects;
+    private List<Project> projects;
 
-    public List<Project> getListProjects() {
-        return listProjects;
-    }
-
-    public void setListProjects(List<Project> listProjects) {
-        this.listProjects = listProjects;
-    }
 
     public Client(int id, String name, String address, String phone, boolean isProfessional) {
         this.id = id;
@@ -27,11 +18,11 @@ public class Client {
         this.address = address;
         this.phone = phone;
         this.isProfessional = isProfessional;
-        listProjects=new ArrayList<>();
+        projects = new ArrayList<>();
     }
 
     public Client() {
-        listProjects=new ArrayList<>();
+        projects = new ArrayList<>();
     }
 
     public int getId() {
@@ -50,19 +41,19 @@ public class Client {
         this.name = name;
     }
 
-    public String getaddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setaddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public String getphone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setphone(String phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -72,6 +63,14 @@ public class Client {
 
     public void setProfessional(boolean professional) {
         isProfessional = professional;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override

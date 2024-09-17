@@ -1,8 +1,9 @@
 package repository;
 
+
+
 import config.Database;
-import domain.entities.Client;
-import domain.entities.Project;
+import domain.entities.*;
 import exceptions.ProjectsNotFoundException;
 import repository.interfaces.ProjectInterface;
 
@@ -14,49 +15,88 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectRepository implements ProjectInterface<Project> {
-    private Connection connection;
+public class ProjectRepository implements ProjectInterface {
+    private final Connection connection;
+    private final ClientRepository clientRepository;
+    private final ComponentRepository componentRepository;
+    private final MaterialRepository materialRepository;
+    private final WorkForceRepository workForceRepository;
 
-    public ProjectRepository(Connection connection) throws SQLException {
+    public ProjectRepository(ClientRepository clientRepository, ComponentRepository componentRepository, MaterialRepository materialRepository, WorkForceRepository workForceRepository) throws SQLException {
+        this.clientRepository = clientRepository;
+        this.componentRepository = componentRepository;
+        this.materialRepository = materialRepository;
+        this.workForceRepository = workForceRepository;
         this.connection = Database.getInstance().getConnection();
     }
 
-
     @Override
     public Project save(Project project) {
-        String sql = "INSERT INTO projects (projectName, profitMargin, totalCost, status, client_id) VALUES (?, ?, ?, ?::projectStatus, ?);";
+        String sql = "INSERT INTO projects (projectName, profitMargin, totalCost, status, surface, client_id) VALUES (?, ?, ?, ?::projectStatus, ?, ?) RETURNING id;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, project.getprojectname());
-            preparedStatement.setDouble(2, project.getprofitMargin());
-            preparedStatement.setDouble(3, project.gettotalCost());
+            preparedStatement.setString(1, project.getProjectName());
+            preparedStatement.setDouble(2, project.getProfitMargin());
+            preparedStatement.setDouble(3, project.getTotalCost());
             preparedStatement.setString(4, project.getStatus().name());
-            preparedStatement.setInt(5, project.getClient().getId());
+            preparedStatement.setDouble(5, project.getSurface());
+            preparedStatement.setInt(6, project.getClient().getId());
 
-            int affectedRows = preparedStatement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("Creating project failed, no rows affected.");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                project.setId(resultSet.getInt("id"));  // Set the generated id
+                System.out.println("Project saved with ID: " + project.getId());
+                return project;
+            } else {
+                throw new SQLException("Creating project failed, no ID obtained.");
             }
-
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error saving project: " + e.getMessage());
+            return null;
         }
-        return project;
     }
 
 
+
     @Override
-    public void saveClientProject(Client client, Project project) {
+    public void saveClientProject(Client client, Project project, Material material, WorkForce workForce) {
         try {
             connection.setAutoCommit(false);
 
-            ClientRepository clientRepository = new ClientRepository(connection);
             Client savedClient = clientRepository.save(client);
             project.setClient(savedClient);
-            save(project);
-            connection.commit();
 
+            Project savedProject = save(project);
+
+            Component materialComponent = new Component();
+            materialComponent.setName(material.getName());
+            materialComponent.setComponentType("Material");
+            materialComponent.setVatRate(material.getVatRate());
+            materialComponent.setProject(savedProject);
+
+            Component savedMaterialComponent = componentRepository.save(materialComponent);
+
+            material.setComponent(savedMaterialComponent);
+            materialRepository.save(material);
+
+            Component workforceComponent = new Component();
+            workforceComponent.setName(workForce.getName());
+            workforceComponent.setComponentType("Workforce");
+            workforceComponent.setVatRate(workForce.getVatRate());
+            workforceComponent.setProject(savedProject);
+
+            Component savedWorkforceComponent = componentRepository.save(workforceComponent);
+
+
+            workForce.setComponent(savedWorkforceComponent);
+            workForceRepository.save(workForce);
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                System.out.println("Error during transaction rollback: " + rollbackEx.getMessage());
+            }
             System.out.println("Error saving client and project: " + e.getMessage());
         } finally {
             try {
@@ -66,6 +106,9 @@ public class ProjectRepository implements ProjectInterface<Project> {
             }
         }
     }
+
+
+
 
 
     @Override
@@ -84,6 +127,7 @@ public class ProjectRepository implements ProjectInterface<Project> {
                         resultSet.getDouble("profitMargin"),
                         resultSet.getDouble("totalCost"),
                         resultSet.getString("status"),
+                        resultSet.getDouble("surface"),
                         client
                 );
                 return Optional.of(foundProject);
@@ -111,6 +155,7 @@ public class ProjectRepository implements ProjectInterface<Project> {
                         resultSet.getDouble("profitMargin"),
                         resultSet.getDouble("totalCost"),
                         resultSet.getString("status"),
+                        resultSet.getDouble("surface"),
                         client
                 );
                 projects.add(project);
@@ -123,15 +168,16 @@ public class ProjectRepository implements ProjectInterface<Project> {
 
     @Override
     public Project update(Project project) {
-        String sql = "UPDATE projects SET projectName = ?, profitMargin = ?, totalCost = ?, status = ?::projectStatus, client_id = ? WHERE id = ?";
+        String sql = "UPDATE projects SET projectName = ?, profitMargin = ?, totalCost = ?, status = ?::projectStatus , surface = ?, client_id = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, project.getprojectname());
-            preparedStatement.setDouble(2, project.getprofitMargin());
-            preparedStatement.setDouble(3, project.gettotalCost());
+            preparedStatement.setString(1, project.getProjectName());
+            preparedStatement.setDouble(2, project.getProfitMargin());
+            preparedStatement.setDouble(3, project.getTotalCost());
             preparedStatement.setString(4, project.getStatus().name());
-            preparedStatement.setInt(5, project.getClient().getId());
-            preparedStatement.setInt(6, project.getId());
+            preparedStatement.setString(5, project.getStatus().name());
+            preparedStatement.setDouble(6, project.getSurface());
+            preparedStatement.setInt(7, project.getId());
 
             int result = preparedStatement.executeUpdate();
             if (result == 1) {

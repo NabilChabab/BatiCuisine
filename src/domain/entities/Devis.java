@@ -2,23 +2,24 @@ package domain.entities;
 
 import java.time.LocalDate;
 
-public class Quote {
+public class Devis {
     private int id;
     private double estimatedAmount;
     private LocalDate issueDate;
+    private LocalDate validatedDate;
     private boolean isAccepted;
     private Project project;
 
-    public Quote(int id, double estimatedAmount, LocalDate issueDate, boolean isAccepted, Project project) {
+    public Devis(int id, double estimatedAmount, LocalDate issueDate, LocalDate validatedDate, boolean isAccepted, Project project) {
         this.id = id;
         this.estimatedAmount = estimatedAmount;
         this.issueDate = issueDate;
+        this.validatedDate = validatedDate;
         this.isAccepted = isAccepted;
         this.project = project;
     }
 
-    public Quote() {
-    }
+    public Devis() {}
 
     public int getId() {
         return id;
@@ -42,6 +43,14 @@ public class Quote {
 
     public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
+    }
+
+    public LocalDate getValidatedDate() {
+        return validatedDate;
+    }
+
+    public void setValidatedDate(LocalDate validatedDate) {
+        this.validatedDate = validatedDate;
     }
 
     public boolean isAccepted() {

@@ -1,22 +1,23 @@
 package domain.entities;
 
-public class Component {
+public  class Component {
     private int id;
     private String name;
     private String componentType;
     private double vatRate;
+    private Project project;
 
-
-    public Component(String name, String componentType, double vatRate) {
+    public Component(int id, String name, String componentType, double vatRate, Project project) {
+        this.id = id;
         this.name = name;
         this.componentType = componentType;
         this.vatRate = vatRate;
+        this.project = project;
     }
 
+    public Component(){
 
-    public Component() {
     }
-
 
     public int getId() {
         return id;
@@ -50,13 +51,12 @@ public class Component {
         this.vatRate = vatRate;
     }
 
-    @Override
-    public String toString() {
-        return "Component{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", componentType='" + componentType + '\'' +
-                ", vatRate=" + vatRate +
-                '}';
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
+

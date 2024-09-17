@@ -1,11 +1,12 @@
 package repository.interfaces;
 
+
 import domain.entities.Client;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ClientInterface <Client>  extends CrudInterface<Client> {
+public interface ClientInterface extends CrudInterface<Client> {
 
     @Override
     public Client save(Client client);
@@ -22,5 +23,5 @@ public interface ClientInterface <Client>  extends CrudInterface<Client> {
     @Override
     public boolean delete(Client client);
 
-    public List<Client> findByName(String name);
+    public Optional<Client> findByName(String name);
 }
