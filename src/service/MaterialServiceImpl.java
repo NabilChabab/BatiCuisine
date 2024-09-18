@@ -2,16 +2,16 @@ package service;
 
 import domain.entities.Material;
 import repository.MaterialRepository;
-import repository.interfaces.MaterialInterface;
+import service.interfaces.MaterialService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MaterialService implements MaterialInterface<Material> {
+public class MaterialServiceImpl implements MaterialService {
 
     private final MaterialRepository materialRepository;
 
-    public MaterialService(MaterialRepository materialRepository) {
+    public MaterialServiceImpl(MaterialRepository materialRepository) {
         this.materialRepository = materialRepository;
     }
 

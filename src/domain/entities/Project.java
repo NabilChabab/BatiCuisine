@@ -33,6 +33,10 @@ public class Project {
 
     }
 
+    public void addComponent(Component component){
+        components.add(component);
+    }
+
     public ProjectStatus getStatus() {
         return status;
     }

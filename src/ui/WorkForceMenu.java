@@ -4,8 +4,8 @@ import domain.entities.Component;
 import domain.entities.Project;
 import domain.entities.WorkForce;
 import domain.enums.ComponentType;
-import service.ComponentService;
-import service.WorkForceService;
+import service.interfaces.ComponentService;
+import service.interfaces.WorkForceService;
 
 import java.util.List;
 import java.util.Optional;

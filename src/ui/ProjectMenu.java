@@ -1,11 +1,9 @@
 package ui;
 
 import domain.entities.Client;
-import domain.entities.Material;
 import domain.entities.Project;
-import domain.entities.WorkForce;
 import domain.enums.ProjectStatus;
-import service.ProjectService;
+import service.interfaces.ProjectService;
 
 import java.util.Scanner;
 
@@ -111,8 +109,46 @@ public class ProjectMenu {
 
     public void findAll() {
         System.out.println("\n📜 **All Projects** 📜");
-        projectService.findAll();
+        System.out.println("===================================================");
+
+        projectService.findAll().forEach(project -> {
+            System.out.println("🟢 --- Project Details ---");
+            System.out.println(String.format("ID: %-10s | Name: %-20s", project.getId(), project.getProjectName()));
+            System.out.println(String.format("Surface: %-10s | Status: %-10s", project.getSurface(), project.getStatus()));
+            System.out.println(String.format("Profit Margin: %-10s | Total Cost: %-10s", project.getProfitMargin(), project.getTotalCost()));
+            System.out.println("---------------------------------------------------");
+
+            Client client = project.getClient();
+            if (client != null) {
+                System.out.println("👤 Client Information:");
+                System.out.println(String.format("Name: %-20s | Phone: %-15s", client.getName(), client.getPhone()));
+                System.out.println(String.format("Address: %-30s", client.getAddress()));
+            } else {
+                System.out.println("Client: Not available");
+            }
+            System.out.println("---------------------------------------------------");
+
+            System.out.println("🔩 --- Components ---");
+            project.getComponents().forEach(component -> {
+                System.out.println(String.format("Component ID: %-10s | Type: %-10s | Name: %-20s", component.getId(), component.getComponentType(), component.getName()));
+                System.out.println(String.format("VAT Rate: %-10s", component.getVatRate()));
+
+                System.out.println("🛠️ Materials:");
+                component.getMaterials().forEach(material -> {
+                    System.out.println(String.format("  - Material ID: %-10s | Material: %-20s | VAT Rate: %-10s", material.getId(), material.getName(), material.getVatRate()));
+                });
+
+                System.out.println("💪 Work Forces:");
+                component.getWorkForces().forEach(workForce -> {
+                    System.out.println(String.format("  - Work Force ID: %-10s | Name: %-20s", workForce.getId(), workForce.getName()));
+                });
+                System.out.println();
+            });
+            System.out.println("===================================================\n");
+        });
     }
+
+
 
     // Method to draw a simple table header for better presentation
     private String drawTableHeader(String title) {
@@ -126,7 +162,7 @@ public class ProjectMenu {
         return "| " + String.format("%-43s", content) + " |";
     }
 
-    // Method to close the table after rows
+
     private String drawTableFooter() {
         return "+---------------------------------------------+";
     }

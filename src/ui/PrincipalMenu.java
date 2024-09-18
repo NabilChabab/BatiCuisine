@@ -16,7 +16,7 @@ public class PrincipalMenu {
         boolean check = true;
 
         while (check) {
-            System.out.println("\n" + drawTableHeader("🏠 Kitchen Renovation Project Management 🛠️"));
+            System.out.println("\n" + drawTableHeader("🏗️ BatiCuisine Project Management System"));
             System.out.println(drawTableRow("1. ➕ Create a New Project"));
             System.out.println(drawTableRow("2. 📂 Display Existing Projects"));
             System.out.println(drawTableRow("3. 💰 Calculate Project Cost"));
@@ -25,7 +25,7 @@ public class PrincipalMenu {
             System.out.print("👉 Please select an option (1-4): ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume the newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:

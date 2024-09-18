@@ -2,16 +2,16 @@ package service;
 
 import domain.entities.WorkForce;
 import repository.WorkForceRepository;
-import repository.interfaces.WorkForceInterface;
+import service.interfaces.WorkForceService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class WorkForceService implements WorkForceInterface<WorkForce> {
+public class WorkForceServiceImpl implements WorkForceService {
 
     private final WorkForceRepository workForceRepository;
 
-    public WorkForceService(WorkForceRepository workForceRepository) {
+    public WorkForceServiceImpl(WorkForceRepository workForceRepository) {
         this.workForceRepository = workForceRepository;
     }
 

@@ -4,8 +4,8 @@ import domain.entities.Component;
 import domain.entities.Material;
 import domain.entities.Project;
 import domain.enums.ComponentType;
-import service.ComponentService;
-import service.MaterialService;
+import service.interfaces.ComponentService;
+import service.interfaces.MaterialService;
 
 import java.util.Scanner;
 

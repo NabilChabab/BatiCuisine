@@ -139,29 +139,103 @@ public class ProjectRepository implements ProjectInterface {
 
     @Override
     public List<Project> findAll() {
-        String sql = "SELECT * FROM projects";
+        String sql = "SELECT\n" +
+                "    p.id AS project_id,\n" +
+                "    p.projectName,\n" +
+                "    p.profitMargin,\n" +
+                "    p.totalCost,\n" +
+                "    p.status AS projectStatus,\n" +
+                "    p.surface,\n" +
+                "    cl.id AS client_id,\n" +
+                "    cl.name AS clientName,\n" +
+                "    cl.address AS clientAddress,\n" +
+                "    cl.phone AS clientPhone,\n" +
+                "    cl.isProfessional AS clientIsProfessional,\n" +
+                "    comp.id AS component_id,\n" +
+                "    comp.name AS componentName,\n" +
+                "    comp.componentType AS componentType,\n" +
+                "    comp.vatRate AS vatRate,\n" +
+                "    ma.id AS materialId,\n" +
+                "    ma.quantity AS quantity,\n" +
+                "    ma.transportCost AS transportCost,\n" +
+                "    ma.qualitycoefficient AS coefficientQuality,\n" +
+                "    le.id AS laborId,\n" +
+                "    le.hourlyrate AS hourlyCost,\n" +
+                "    le.workhours AS workingHours,\n" +
+                "    le.workerProductivity AS workerProductivity\n" +
+                "FROM\n" +
+                "    projects p\n" +
+                "    LEFT JOIN clients cl ON p.client_id = cl.id\n" +
+                "    LEFT JOIN components comp ON p.id = comp.project_id\n" +
+                "    LEFT JOIN materials ma ON comp.id = ma.component_id\n" +
+                "    LEFT JOIN labor le ON comp.id = le.component_id;";
+
         List<Project> projects = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
+                int projectId = resultSet.getInt("project_id");
+
+
                 Client client = new Client();
                 client.setId(resultSet.getInt("client_id"));
+                client.setName(resultSet.getString("clientName"));
+                client.setAddress(resultSet.getString("clientAddress"));
+                client.setPhone(resultSet.getString("clientPhone"));
+                client.setProfessional(resultSet.getBoolean("clientIsProfessional"));
+
                 Project project = new Project(
-                        resultSet.getInt("id"),
+                        projectId,
                         resultSet.getString("projectName"),
                         resultSet.getDouble("profitMargin"),
                         resultSet.getDouble("totalCost"),
-                        resultSet.getString("status"),
+                        resultSet.getString("projectStatus"),
                         resultSet.getDouble("surface"),
                         client
                 );
+
                 projects.add(project);
+
+
+                int componentId = resultSet.getInt("component_id");
+
+                Component component = new Component();
+                component.setId(componentId);
+                component.setName(resultSet.getString("componentName"));
+                component.setComponentType(resultSet.getString("componentType"));
+                component.setVatRate(resultSet.getDouble("vatRate"));
+                component.setProject(project);
+
+                project.addComponent(component);
+
+                int materialId = resultSet.getInt("materialId");
+                Material material = new Material();
+                material.setId(materialId);
+                material.setQuantity(resultSet.getDouble("quantity"));
+                material.setTransportCost(resultSet.getDouble("transportCost"));
+                material.setCoefficientQuality(resultSet.getDouble("coefficientQuality"));
+                material.setComponent(component);
+
+                component.addMaterial(material);
+
+
+                int laborId = resultSet.getInt("laborId");
+                WorkForce workForce = new WorkForce();
+                workForce.setId(laborId);
+                workForce.setHourlyCost(resultSet.getDouble("hourlyCost"));
+                workForce.setWorkingHours(resultSet.getInt("workingHours"));
+                workForce.setWorkerProductivity(resultSet.getDouble("workerProductivity"));
+                workForce.setComponent(component);
+
+                component.addWorkForce(workForce);
+
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error retrieving projects: " + e.getMessage());
         }
+
         return projects;
     }
 

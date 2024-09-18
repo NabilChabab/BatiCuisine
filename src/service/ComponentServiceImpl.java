@@ -2,18 +2,19 @@ package service;
 
 import domain.entities.Component;
 import repository.ComponentRepository;
-import repository.interfaces.ComponentInterface;
+import service.interfaces.ComponentService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ComponentService  implements ComponentInterface<Component> {
+public class ComponentServiceImpl implements ComponentService {
 
     private final ComponentRepository componentRepository;
-    public ComponentService(ComponentRepository componentRepository) {
+    public ComponentServiceImpl(ComponentRepository componentRepository) {
         this.componentRepository = componentRepository;
     }
 
+    @Override
     public Component save(Component component) {
         return this.componentRepository.save(component);
     }

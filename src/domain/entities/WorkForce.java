@@ -14,6 +14,10 @@ public class WorkForce extends Component {
         this.component = component;
     }
 
+    public WorkForce() {
+
+    }
+
     public double getHourlyCost() {
         return hourlyCost;
     }
