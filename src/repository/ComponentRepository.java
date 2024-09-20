@@ -44,7 +44,7 @@ public class ComponentRepository implements ComponentInterface<Component> {
 
 
     @Override
-    public Optional<Component> findById(Component component) {
+    public Optional<Component> findById(int component) {
         return Optional.empty();
     }
 

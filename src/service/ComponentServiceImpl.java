@@ -21,7 +21,7 @@ public class ComponentServiceImpl implements ComponentService {
 
 
     @Override
-    public Optional<Component> findById(Component component) {
+    public Optional<Component> findById(int component) {
         return Optional.empty();
     }
 

@@ -11,7 +11,7 @@ public interface DevisInterface extends CrudInterface<Devis> {
     public Devis save(Devis entity);
 
     @Override
-    public Optional<Devis> findById(Devis devis);
+    public Optional<Devis> findById(int devis);
 
     @Override
     public List<Devis> findAll();
@@ -21,4 +21,9 @@ public interface DevisInterface extends CrudInterface<Devis> {
 
     @Override
     public boolean delete(Devis entity);
+
+
+    public boolean deleteDevisById(int id);
+
+    Optional<Devis> findDevisByProject(int id);
 }

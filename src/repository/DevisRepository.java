@@ -43,7 +43,7 @@ public class DevisRepository implements DevisInterface {
     }
 
     @Override
-    public Optional<Devis> findById(Devis devis) {
+    public Optional<Devis> findById(int devis) {
         String query = "SELECT q.id, q.estimatedAmount, q.issueDate, q.isAccepted, q.project_id, " +
                 "p.projectName, p.profitMargin, p.totalCost, p.status, " +
                 "c.id AS client_id, c.name, c.address, c.phone, c.isProfessional " +
@@ -53,7 +53,7 @@ public class DevisRepository implements DevisInterface {
                 "WHERE q.id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, devis.getId());
+            preparedStatement.setInt(1, devis);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = new Client(
@@ -163,10 +163,15 @@ public class DevisRepository implements DevisInterface {
     }
 
     @Override
-    public boolean delete(Devis devis) {
+    public boolean delete(Devis entity) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteDevisById(int id) {
         String query = "DELETE FROM quotes WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, devis.getId());
+            preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows == 1;
         } catch (SQLException e) {
@@ -174,4 +179,54 @@ public class DevisRepository implements DevisInterface {
         }
         return false;
     }
+
+    public Optional<Devis> findDevisByProject(int projectId) {
+        String sql = "SELECT q.id,\n" +
+                "       q.estimatedamount,\n" +
+                "       q.issuedate,\n" +
+                "       q.validateddate,\n" +
+                "       q.isaccepted,\n" +
+                "       q.project_id AS project_id,\n" +
+                "       p.id AS prId,\n" +
+                "       p.projectname,\n" +
+                "       p.client_id AS client_id,\n" +
+                "       c.name AS clientName\n" +
+                "FROM quotes q\n" +
+                "JOIN projects p ON p.id = q.project_id\n" +
+                "JOIN clients c ON c.id = p.client_id\n" +
+                "WHERE q.project_id = ?\n";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Devis devis = new Devis();
+                Project project = new Project();
+                Client client = new Client();
+
+                project.setProjectName(resultSet.getString("projectname"));
+                client.setName(resultSet.getString("clientName"));
+                project.setClient(client);
+
+                devis.setId(resultSet.getInt("id"));
+                devis.setEstimatedAmount(resultSet.getDouble("estimatedamount"));
+                devis.setIssueDate(resultSet.getDate("issuedate").toLocalDate());
+
+                Date validatedDate = resultSet.getDate("validateddate");
+                devis.setValidatedDate(validatedDate != null ? validatedDate.toLocalDate() : null);
+
+                devis.setAccepted(resultSet.getBoolean("isaccepted"));
+                devis.setProject(project);
+
+                return Optional.of(devis);
+            }
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
+
 }

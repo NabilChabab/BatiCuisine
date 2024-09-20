@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface CrudInterface<T> {
     T save(T entity);
 
-    Optional<T> findById(T t);
+    Optional<T> findById(int entity);
 
     List<T> findAll();
 

@@ -20,7 +20,7 @@ public class DevisServiceImpl implements DevisService {
     }
 
     @Override
-    public Optional<Devis> findById(Devis devis) {
+    public Optional<Devis> findById(int devis) {
         return this.devisRepository.findById(devis);
     }
 
@@ -30,13 +30,18 @@ public class DevisServiceImpl implements DevisService {
     }
 
     @Override
-    public boolean delete(Devis devis) {
-        return this.devisRepository.delete(devis);
+    public boolean delete(int id) {
+        return this.devisRepository.deleteDevisById(id);
     }
 
     @Override
     public List<Devis> findAll() {
         return this.devisRepository.findAll();
+    }
+
+    @Override
+    public Optional<Devis> findDevisByProject(int id) {
+        return this.devisRepository.findDevisByProject(id);
     }
 
 }

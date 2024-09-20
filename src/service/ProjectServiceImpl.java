@@ -43,13 +43,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<Project> findById(Project project) {
+    public Optional<Project> findById(int project) {
         return this.projectRepository.findById(project);
     }
 
+
     @Override
-    public void saveClientProject(Client client, Project project, Material material, WorkForce workForce) {
-        this.projectRepository.saveClientProject(client, project,material, workForce);
+    public Project findProjectByName(String name) {
+        return this.projectRepository.findProjectByName(name);
     }
+
 
 }

@@ -5,7 +5,9 @@ import domain.entities.Project;
 import domain.enums.ProjectStatus;
 import service.interfaces.ProjectService;
 
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ProjectMenu {
 
@@ -15,6 +17,10 @@ public class ProjectMenu {
     private Client selectedClient;
     private final MaterialMenu materialMenu;
     private final WorkForceMenu workForceMenu;
+
+    private static final int TABLE_WIDTH = 160;
+    private static final String BLUE = "\u001B[34m";
+    private static final String RESET = "\u001B[0m";
 
     public ProjectMenu(ProjectService projectService, ClientMenu clientMenu, MaterialMenu materialMenu, WorkForceMenu workForceMenu) {
         this.projectService = projectService;
@@ -108,44 +114,71 @@ public class ProjectMenu {
     }
 
     public void findAll() {
-        System.out.println("\n📜 **All Projects** 📜");
-        System.out.println("===================================================");
+        List<Project> projects = projectService.findAll();
+        System.out.println("\n📜 All Projects 📜");
+        printTableHeader();
+        projects.stream()
+                .distinct() // Ensure no duplicates
+                .forEach(this::printProjectRow);
+        printTableFooter();
+    }
 
-        projectService.findAll().forEach(project -> {
-            System.out.println("🟢 --- Project Details ---");
-            System.out.println(String.format("ID: %-10s | Name: %-20s", project.getId(), project.getProjectName()));
-            System.out.println(String.format("Surface: %-10s | Status: %-10s", project.getSurface(), project.getStatus()));
-            System.out.println(String.format("Profit Margin: %-10s | Total Cost: %-10s", project.getProfitMargin(), project.getTotalCost()));
-            System.out.println("---------------------------------------------------");
+    private void printTableHeader() {
+        System.out.println(BLUE);
+        printLine( '=');
+        System.out.printf(BLUE+"| %-4s | %-20s | %-8s | %-10s | %-12s | %-10s | %-20s | %-12s | %-20s | %-25s |\n",
+                "ID", "Name", "Surface", "Status", "Profit Margin", "Total Cost", "Client Name", "Client Phone", "Client Address", "Components");
+        printLine('-');
+    }
 
-            Client client = project.getClient();
-            if (client != null) {
-                System.out.println("👤 Client Information:");
-                System.out.println(String.format("Name: %-20s | Phone: %-15s", client.getName(), client.getPhone()));
-                System.out.println(String.format("Address: %-30s", client.getAddress()));
-            } else {
-                System.out.println("Client: Not available");
+    private void printProjectRow(Project project) {
+        Client client = project.getClient();
+        String clientName = client != null ? truncate(client.getName(), 20) : "N/A";
+        String clientPhone = client != null ? truncate(client.getPhone(), 12) : "N/A";
+        String clientAddress = client != null ? truncate(client.getAddress(), 20) : "N/A";
+
+        String components = project.getComponents().stream()
+                .map(c -> c.getName() + "(" + c.getComponentType() + ")")
+                .collect(Collectors.joining(", "));
+
+        System.out.printf("| %-4d | %-20s | %-8s | %-10s | %-12s | %-10s | %-20s | %-12s | %-20s | %-25s |\n",
+                project.getId(),
+                truncate(project.getProjectName(), 20),
+                truncate(String.valueOf(project.getSurface()), 8),
+                truncate(String.valueOf(project.getStatus()), 10),
+                truncate(String.valueOf(project.getProfitMargin()), 12),
+                truncate(String.valueOf(project.getTotalCost()), 10),
+                clientName,
+                clientPhone,
+                clientAddress,
+                truncate(components, 25));
+
+        // If components don't fit in one line, print them on subsequent lines
+        if (components.length() > 25) {
+            for (String line : splitIntoLines(components.substring(25), 25)) {
+                System.out.printf("| %-4s | %-20s | %-8s | %-10s | %-12s | %-10s | %-20s | %-12s | %-20s | %-25s |\n",
+                        "", "", "", "", "", "", "", "", "", line);
             }
-            System.out.println("---------------------------------------------------");
+        }
+        printLine('-');
+    }
 
-            System.out.println("🔩 --- Components ---");
-            project.getComponents().forEach(component -> {
-                System.out.println(String.format("Component ID: %-10s | Type: %-10s | Name: %-20s", component.getId(), component.getComponentType(), component.getName()));
-                System.out.println(String.format("VAT Rate: %-10s", component.getVatRate()));
+    private void printTableFooter() {
+        printLine('=');
+        System.out.println(RESET);
+    }
 
-                System.out.println("🛠️ Materials:");
-                component.getMaterials().forEach(material -> {
-                    System.out.println(String.format("  - Material ID: %-10s | Material: %-20s | VAT Rate: %-10s", material.getId(), material.getName(), material.getVatRate()));
-                });
+    private void printLine(char c) {
+        System.out.println(String.format("%" + TABLE_WIDTH + "s", "").replace(' ', c));
+    }
 
-                System.out.println("💪 Work Forces:");
-                component.getWorkForces().forEach(workForce -> {
-                    System.out.println(String.format("  - Work Force ID: %-10s | Name: %-20s", workForce.getId(), workForce.getName()));
-                });
-                System.out.println();
-            });
-            System.out.println("===================================================\n");
-        });
+    private String truncate(String input, int maxLength) {
+        if (input == null) return "N/A";
+        return input.length() > maxLength ? input.substring(0, maxLength - 3) + "..." : input;
+    }
+
+    private String[] splitIntoLines(String input, int maxLength) {
+        return input.split("(?<=\\G.{" + maxLength + "})");
     }
 
 

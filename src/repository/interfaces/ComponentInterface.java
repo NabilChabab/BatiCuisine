@@ -11,7 +11,7 @@ public interface ComponentInterface  <T extends Component> extends CrudInterface
     public Component save(Component component);
 
     @Override
-    public Optional<Component> findById(Component component);
+    public Optional<Component> findById(int component);
 
     @Override
     public List<Component> findAll();

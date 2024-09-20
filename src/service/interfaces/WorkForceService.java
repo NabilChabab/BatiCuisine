@@ -11,7 +11,7 @@ public interface WorkForceService extends WorkForceInterface<WorkForce> {
     WorkForce save(WorkForce workForce);
 
     @Override
-    Optional<WorkForce> findById(WorkForce workForce);
+    Optional<WorkForce> findById(int workForce);
 
     @Override
     List<WorkForce> findAll();

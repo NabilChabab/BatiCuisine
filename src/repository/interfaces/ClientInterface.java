@@ -12,7 +12,7 @@ public interface ClientInterface extends CrudInterface<Client> {
     public Client save(Client client);
 
     @Override
-    public Optional<Client> findById(Client client);
+    public Optional<Client> findById(int client);
 
     @Override
     public List<Client> findAll();

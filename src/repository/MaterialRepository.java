@@ -51,7 +51,7 @@ public class MaterialRepository implements MaterialInterface<Material> {
 
 
     @Override
-    public Optional<Material> findById(Material material) {
+    public Optional<Material> findById(int material) {
         return Optional.empty();
     }
 

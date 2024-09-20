@@ -10,7 +10,7 @@ public interface WorkForceInterface<T extends WorkForce> extends CrudInterface<W
     public WorkForce save(WorkForce workForce);
 
     @Override
-    public Optional<WorkForce> findById(WorkForce workForce);
+    public Optional<WorkForce> findById(int workForce);
 
     @Override
     public List<WorkForce> findAll();

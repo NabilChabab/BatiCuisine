@@ -24,7 +24,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Optional<Client> findById(Client Client) {
+    public Optional<Client> findById(int Client) {
         return this.clientRepository.findById(Client);
     }
 

@@ -11,7 +11,7 @@ public interface MaterialService extends MaterialInterface<Material> {
     Material save(Material material);
 
     @Override
-    Optional<Material> findById(Material material);
+    Optional<Material> findById(int material);
 
     @Override
     List<Material> findAll();

@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ClientService {
     Client save(Client Client);
 
-    Optional<Client> findById(Client Client);
+    Optional<Client> findById(int Client);
 
     Client update(Client Client);
 

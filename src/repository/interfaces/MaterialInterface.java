@@ -10,7 +10,7 @@ public interface MaterialInterface  <T extends Material> extends CrudInterface<M
     public Material save(Material entity);
 
     @Override
-    public Optional<Material> findById(Material material);
+    public Optional<Material> findById(int material);
 
     @Override
     public List<Material> findAll();
