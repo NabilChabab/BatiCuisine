@@ -47,9 +47,8 @@ public class WorkForceRepository implements WorkForceInterface<WorkForce> {
         return workForce;
     }
 
-
     @Override
-    public Optional<WorkForce> findById(WorkForce workForce) {
+    public Optional<WorkForce> findById(int entity) {
         return Optional.empty();
     }
 

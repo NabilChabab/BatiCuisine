@@ -21,7 +21,7 @@ public class WorkForceServiceImpl implements WorkForceService {
     }
 
     @Override
-    public Optional<WorkForce> findById(WorkForce workForce) {
+    public Optional<WorkForce> findById(int workForce) {
         return this.workForceRepository.findById(workForce);
     }
 

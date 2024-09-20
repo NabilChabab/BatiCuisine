@@ -57,64 +57,15 @@ public class ProjectRepository implements ProjectInterface {
 
 
 
-    @Override
-    public void saveClientProject(Client client, Project project, Material material, WorkForce workForce) {
-        try {
-            connection.setAutoCommit(false);
-
-            Client savedClient = clientRepository.save(client);
-            project.setClient(savedClient);
-
-
-            Component materialComponent = new Component();
-            materialComponent.setName(material.getName());
-            materialComponent.setComponentType("Material");
-            materialComponent.setVatRate(material.getVatRate());
-            materialComponent.setProject(project);
-
-            Component savedMaterialComponent = componentRepository.save(materialComponent);
-
-            material.setComponent(savedMaterialComponent);
-            materialRepository.save(material);
-
-            Component workforceComponent = new Component();
-            workforceComponent.setName(workForce.getName());
-            workforceComponent.setComponentType("Workforce");
-            workforceComponent.setVatRate(workForce.getVatRate());
-            workforceComponent.setProject(project);
-
-            Component savedWorkforceComponent = componentRepository.save(workforceComponent);
-
-
-            workForce.setComponent(savedWorkforceComponent);
-            workForceRepository.save(workForce);
-
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackEx) {
-                System.out.println("Error during transaction rollback: " + rollbackEx.getMessage());
-            }
-            System.out.println("Error saving client and project: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                System.out.println("Error resetting auto-commit: " + e.getMessage());
-            }
-        }
-    }
-
 
 
 
 
     @Override
-    public Optional<Project> findById(Project project) {
+    public Optional<Project> findById(int projectId) {
         String sql = "SELECT * FROM projects WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, project.getId());
+            preparedStatement.setInt(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -282,5 +233,27 @@ public class ProjectRepository implements ProjectInterface {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public Project findProjectByName(String name) {
+        String sql = "SELECT id , projectName FROM projects WHERE projectName = ?";
+        Project project = new Project();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                project.setId(id);
+                project.setProjectName(resultSet.getString("projectName"));
+            } else {
+                throw new ProjectsNotFoundException("Project not found");
+            }
+
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+
+        return project;
     }
 }

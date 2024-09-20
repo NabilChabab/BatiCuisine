@@ -17,7 +17,8 @@ public interface ProjectService {
 
     List<Project> findAll();
 
-    Optional<Project> findById(Project project);
+    Optional<Project> findById(int project);
 
-    void saveClientProject(Client client, Project project, Material material, WorkForce workForce);
+    Project findProjectByName(String name);
+
 }

@@ -111,7 +111,7 @@ public class WorkForceMenu {
         System.out.println("🗑️ Workforce deleted successfully.");
     }
 
-    public void findById(WorkForce workForce) {
+    public void findById(int workForce) {
         Optional<WorkForce> foundWorkForce = this.workForceService.findById(workForce);
         foundWorkForce.ifPresentOrElse(
                 wf -> System.out.println(drawWorkforceTable(wf)),

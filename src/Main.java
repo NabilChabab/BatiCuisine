@@ -36,7 +36,10 @@ public class Main {
         WorkForceService workForceService = new WorkForceServiceImpl(workForceRepository);
         WorkForceMenu workForceMenu = new WorkForceMenu(workForceService,componentService);
         ProjectMenu projectMenu = new ProjectMenu(projectService,clientMenu,materialMenu, workForceMenu);
-        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu);
+        DevisRepository devisRepository = new DevisRepository();
+        DevisService devisService = new DevisServiceImpl(devisRepository);
+        DevisMenu devisMenu = new DevisMenu(devisService,projectService);
+        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu , devisMenu);
         principalMenu.Menu();
     }
 }

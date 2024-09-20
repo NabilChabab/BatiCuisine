@@ -48,16 +48,16 @@ public class ClientRepository implements ClientInterface {
 
 
     @Override
-    public Optional<Client> findById(Client client) {
+    public Optional<Client> findById(int client) {
         try {
             connection.setAutoCommit(false);
             String query = "SELECT * FROM clients WHERE id = ?";
             var preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, client.getId());
+            preparedStatement.setInt(1, client);
             var resultSet = preparedStatement.executeQuery();
             connection.commit();
             if (resultSet.next()) {
-                return Optional.of(client);
+                return Optional.of(mapResultSetToClient(resultSet));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

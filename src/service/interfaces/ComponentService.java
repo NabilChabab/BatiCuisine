@@ -10,7 +10,7 @@ public interface ComponentService extends ComponentInterface<Component> {
     Component save(Component component);
 
     @Override
-    Optional<Component> findById(Component component);
+    Optional<Component> findById(int component);
 
     @Override
     List<Component> findAll();

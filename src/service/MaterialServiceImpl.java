@@ -21,7 +21,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public Optional<Material> findById(Material material) {
+    public Optional<Material> findById(int material) {
         return materialRepository.findById(material);
     }
 
