@@ -117,7 +117,6 @@ public class ProjectMenu {
         System.out.println("\n📜 All Projects 📜");
         printTableHeader();
         projects.stream()
-                .distinct()
                 .forEach(this::printProjectRow);
         printTableFooter();
     }
