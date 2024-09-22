@@ -82,6 +82,14 @@ public class ClientMenu {
         System.out.println("\n" + drawTableHeader("🆕 Add a New Client ✏️"));
         System.out.print("📛 Enter the name for the client: ");
         String name = scanner.nextLine();
+
+        // Check if client with the same name already exists
+        Optional<Client> existingClient = clientService.findByName(name);
+        if (existingClient.isPresent()) {
+            System.out.println("\n❌ A client with the name '" + name + "' already exists.");
+            return null; // Exit the method without adding the client
+        }
+
         System.out.print("🏠 Enter the address for the client: ");
         String address = scanner.nextLine();
         System.out.print("📞 Enter the phone number for the client: ");
@@ -98,6 +106,7 @@ public class ClientMenu {
 
         return savedClient;
     }
+
 
     public void findClientById() {
         System.out.println("\n" + drawTableHeader("🔍 Find a Client 🔍"));
