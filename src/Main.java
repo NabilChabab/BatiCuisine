@@ -40,7 +40,9 @@ public class Main {
         DevisService devisService = new DevisService(devisRepository);
         DevisMenu devisMenu = new DevisMenu(devisService,projectService);
         CostMenu costMenu = new CostMenu(projectRepository , componentRepository, materialService , workForceService , devisService, devisMenu);
-        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu , devisMenu , costMenu);
+        ComponentMenu componentMenu = new ComponentMenu(materialMenu, workForceMenu);
+        SystemManagmentMenu systemManagmentMenu = new SystemManagmentMenu(clientMenu, componentMenu, devisMenu);
+        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu , systemManagmentMenu , costMenu);
         principalMenu.Menu();
     }
 }

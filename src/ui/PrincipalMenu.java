@@ -5,13 +5,13 @@ import java.util.Scanner;
 public class PrincipalMenu {
 
     private final ProjectMenu projectMenu;
-    private final DevisMenu devisMenu;
+    private final SystemManagmentMenu systemManagmentMenu;
     private final CostMenu costMenu;
     private static Scanner scanner;
 
-    public PrincipalMenu(ProjectMenu projectMenu, DevisMenu devisMenu, CostMenu costMenu) {
+    public PrincipalMenu(ProjectMenu projectMenu, SystemManagmentMenu systemManagmentMenu, CostMenu costMenu) {
         this.projectMenu = projectMenu;
-        this.devisMenu = devisMenu;
+        this.systemManagmentMenu = systemManagmentMenu;
         this.costMenu = costMenu;
         scanner = new Scanner(System.in);
     }
@@ -24,7 +24,7 @@ public class PrincipalMenu {
             System.out.println(drawTableRow("1. ➕ Create a New Project"));
             System.out.println(drawTableRow("2. 📂 Display Existing Projects"));
             System.out.println(drawTableRow("3. 💰 Calculate Project Cost"));
-            System.out.println(drawTableRow("4. 📑 Devis Management"));
+            System.out.println(drawTableRow("4. 📑 System Management (Devis - Clients - Components)"));
             System.out.println(drawTableRow("5. 🚪 Quit"));
             System.out.println(drawTableFooter());
             System.out.print("👉 Please select an option (1-4): ");
@@ -43,7 +43,7 @@ public class PrincipalMenu {
                     totalCost();
                     break;
                 case 4:
-                    devisMenu.displayMenu();
+                    systemManagmentMenu.displayMenu();
                     break;
                 case 5:
                     check = false;
