@@ -93,7 +93,7 @@ public class ProjectRepository implements ProjectInterface {
 
     @Override
     public List<Project> findAll() {
-        String sql = "SELECT\n" +
+        String sql = "SELECT DISTINCT\n" +
                 "    p.id AS project_id,\n" +
                 "    p.projectName,\n" +
                 "    p.profitMargin,\n" +
