@@ -6,11 +6,13 @@ public class PrincipalMenu {
 
     private final ProjectMenu projectMenu;
     private final DevisMenu devisMenu;
+    private final CostMenu costMenu;
     private static Scanner scanner;
 
-    public PrincipalMenu(ProjectMenu projectMenu, DevisMenu devisMenu) {
+    public PrincipalMenu(ProjectMenu projectMenu, DevisMenu devisMenu, CostMenu costMenu) {
         this.projectMenu = projectMenu;
         this.devisMenu = devisMenu;
+        this.costMenu = costMenu;
         scanner = new Scanner(System.in);
     }
 
@@ -30,7 +32,7 @@ public class PrincipalMenu {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (choice) {
+            switch(choice) {
                 case 1:
                     ProjectAddMenu();
                     break;
@@ -66,7 +68,7 @@ public class PrincipalMenu {
 
     public void totalCost() {
         System.out.println("\n" + drawTableHeader("💰 Calculate Project Cost"));
-        // Implementation for calculating total project cost goes here
+        costMenu.save();
     }
 
     // Helper method to draw a simple table header for better presentation

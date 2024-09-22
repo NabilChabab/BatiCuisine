@@ -20,20 +20,18 @@ public class DevisRepository implements DevisInterface {
 
     @Override
     public Devis save(Devis devis) {
-        String query = "INSERT INTO quotes (estimatedAmount, issueDate, isAccepted, project_id) VALUES (?, ?, ?, ?) RETURNING id";
+        String query = "INSERT INTO quotes (estimatedAmount, issueDate,validatedDate, isAccepted, project_id) VALUES (?, ?,?, ?, ?) RETURNING id";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setDouble(1, devis.getEstimatedAmount());
-            preparedStatement.setDate(2, Date.valueOf(devis.getIssueDate()));
-            preparedStatement.setBoolean(3, devis.isAccepted());
-            preparedStatement.setInt(4, devis.getProject().getId());
+            preparedStatement.setDate(2, java.sql.Date.valueOf(devis.getIssueDate()));
+            preparedStatement.setDate(3, java.sql.Date.valueOf(devis.getValidatedDate()));
+            preparedStatement.setBoolean(4, devis.isAccepted());
+            preparedStatement.setInt(5, devis.getProject().getId());
 
             try (ResultSet generatedKeys = preparedStatement.executeQuery()) {
                 if (generatedKeys.next()) {
                     int id = generatedKeys.getInt(1);
                     devis.setId(id);
-                    System.out.println("Quote was successfully saved with ID " + id);
-                } else {
-                    throw new SQLException("Creating quote failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -43,9 +41,9 @@ public class DevisRepository implements DevisInterface {
     }
 
     @Override
-    public Optional<Devis> findById(int devis) {
-        String query = "SELECT q.id, q.estimatedAmount, q.issueDate, q.isAccepted, q.project_id, " +
-                "p.projectName, p.profitMargin, p.totalCost, p.status, " +
+    public Optional<Devis> findById(int id) {
+        String query = "SELECT q.id, q.estimatedAmount, q.issueDate,q.validatedDate ,q.isAccepted, q.project_id, " +
+                "p.projectName, p.profitMargin, p.surface ,p.totalCost, p.status, " +
                 "c.id AS client_id, c.name, c.address, c.phone, c.isProfessional " +
                 "FROM quotes q " +
                 "JOIN projects p ON q.project_id = p.id " +
@@ -53,7 +51,8 @@ public class DevisRepository implements DevisInterface {
                 "WHERE q.id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, devis);
+
+            preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Client client = new Client(
@@ -78,7 +77,7 @@ public class DevisRepository implements DevisInterface {
                             resultSet.getInt("id"),
                             resultSet.getDouble("estimatedAmount"),
                             resultSet.getDate("issueDate").toLocalDate(),
-                            resultSet.getDate("validatedDate").toLocalDate(),
+                            resultSet.getDate("validatedDate") != null ? resultSet.getDate("validatedDate").toLocalDate() : null,
                             resultSet.getBoolean("isAccepted"),
                             project
                     );
@@ -94,12 +93,13 @@ public class DevisRepository implements DevisInterface {
 
     @Override
     public List<Devis> findAll() {
-        String query = "SELECT q.id, q.estimatedAmount, q.issueDate, q.isAccepted, q.project_id, " +
-                "p.projectName, p.profitMargin, p.totalCost, p.status, " +
+        String query = "SELECT q.id, q.estimatedAmount, q.issueDate, q.validatedDate ,q.isAccepted, q.project_id, " +
+                "p.projectName, p.profitMargin,p.surface ,p.totalCost, p.status," +
                 "c.id AS client_id, c.name, c.address, c.phone, c.isProfessional " +
                 "FROM quotes q " +
                 "JOIN projects p ON q.project_id = p.id " +
                 "JOIN clients c ON p.client_id = c.id";
+
         List<Devis> devisList = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -126,7 +126,7 @@ public class DevisRepository implements DevisInterface {
                         resultSet.getInt("id"),
                         resultSet.getDouble("estimatedAmount"),
                         resultSet.getDate("issueDate").toLocalDate(),
-                        resultSet.getDate("validatedDate").toLocalDate(),
+                        resultSet.getDate("validatedDate") != null ? resultSet.getDate("validatedDate").toLocalDate() : null,
                         resultSet.getBoolean("isAccepted"),
                         project
                 );
@@ -145,7 +145,7 @@ public class DevisRepository implements DevisInterface {
         String query = "UPDATE quotes SET estimatedAmount = ?, issueDate = ?, validatedDate = ? ,isAccepted = ?, project_id = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setDouble(1, devis.getEstimatedAmount());
-            preparedStatement.setDate(2, Date.valueOf(devis.getIssueDate()));
+            preparedStatement.setDate(2, java.sql.Date.valueOf(devis.getIssueDate()));
             preparedStatement.setBoolean(3, devis.isAccepted());
             preparedStatement.setInt(4, devis.getProject().getId());
             preparedStatement.setInt(5, devis.getId());
@@ -163,12 +163,7 @@ public class DevisRepository implements DevisInterface {
     }
 
     @Override
-    public boolean delete(Devis entity) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteDevisById(int id) {
+    public boolean delete(int id) {
         String query = "DELETE FROM quotes WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
@@ -180,7 +175,26 @@ public class DevisRepository implements DevisInterface {
         return false;
     }
 
-    public Optional<Devis> findDevisByProject(int projectId) {
+    @Override
+    public void updateAmount(int id, double amount) {
+        String sql = "UPDATE quotes SET estimatedAmount = ? WHERE project_id = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDouble(1, amount);
+            preparedStatement.setInt(2, id);
+            int result = preparedStatement.executeUpdate();
+            if (result == 1) {
+                System.out.println("Devis updated successfully");
+            } else {
+                System.out.println("Update failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public Optional<Devis> findDevisByProjectId(int id) {
         String sql = "SELECT q.id,\n" +
                 "       q.estimatedamount,\n" +
                 "       q.issuedate,\n" +
@@ -197,7 +211,7 @@ public class DevisRepository implements DevisInterface {
                 "WHERE q.project_id = ?\n";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, projectId);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -226,6 +240,21 @@ public class DevisRepository implements DevisInterface {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public boolean updateDevisStatus(int id) {
+        String sql = "UPDATE quotes SET isAccepted = true WHERE id = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, id);
+            int result = preparedStatement.executeUpdate();
+            if(result == 1) {
+                return true;
+            }
+        }catch (SQLException sqlException){
+            System.out.println(sqlException.getMessage());
+        }
+        return false;
     }
 
 

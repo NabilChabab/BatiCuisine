@@ -4,8 +4,8 @@ import domain.entities.Component;
 import domain.entities.Project;
 import domain.entities.WorkForce;
 import domain.enums.ComponentType;
-import service.interfaces.ComponentService;
-import service.interfaces.WorkForceService;
+import service.ComponentService;
+import service.WorkForceService;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,23 +46,17 @@ public class WorkForceMenu {
 
             System.out.print("🔧 Enter the productivity factor (1.0 = standard, > 1.0 = high productivity): ");
             double productivityFactor = scanner.nextDouble();
-            scanner.nextLine();  // Consume newline
+            scanner.nextLine();
 
-            // Create and save the component
-            Component component = new Component();
-            component.setName(name);
-            component.setComponentType(ComponentType.WORKFORCE.name());
-            component.setVatRate(vatRate);
-            component.setProject(project);
-
-            Component savedComponent = componentService.save(component);
 
             // Create and save the workforce
-            workForce = new WorkForce(0, name, "workforce", vatRate, project, hourlyRate, hoursWorked, productivityFactor, savedComponent);
-            workForceService.save(workForce);
-
-            System.out.println("\n✅ Workforce added successfully!\n");
-            System.out.println(drawWorkforceTable(workForce));
+            workForce = new WorkForce(0, name, "workforce", vatRate, project, hourlyRate, hoursWorked, productivityFactor);
+            if (workForceService.save(workForce) != null) {
+                System.out.println("\n✅ Workforce added successfully!\n");
+                System.out.println(drawWorkforceTable(workForce));
+            } else {
+                System.out.println("Error saving workforce.");
+            }
 
             System.out.print("👉 Would you like to add another workforce? (y/n): ");
             continueChoice = scanner.nextLine().trim().toLowerCase();
@@ -100,13 +94,12 @@ public class WorkForceMenu {
                 drawTableFooter();
     }
 
-    // Methods for updating, deleting, finding, and listing all workforce entries
     public void update(WorkForce workForce) {
         this.workForceService.update(workForce);
         System.out.println("🔄 Workforce updated successfully.");
     }
 
-    public void delete(WorkForce workForce) {
+    public void delete(int workForce) {
         this.workForceService.delete(workForce);
         System.out.println("🗑️ Workforce deleted successfully.");
     }

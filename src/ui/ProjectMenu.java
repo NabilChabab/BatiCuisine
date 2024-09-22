@@ -3,9 +3,11 @@ package ui;
 import domain.entities.Client;
 import domain.entities.Project;
 import domain.enums.ProjectStatus;
-import service.interfaces.ProjectService;
+import service.ProjectService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,7 @@ public class ProjectMenu {
     private final MaterialMenu materialMenu;
     private final WorkForceMenu workForceMenu;
 
-    private static final int TABLE_WIDTH = 160;
+    private static final int TABLE_WIDTH = 170;
     private static final String BLUE = "\u001B[34m";
     private static final String RESET = "\u001B[0m";
 
@@ -93,14 +95,11 @@ public class ProjectMenu {
             System.out.println("\n" + drawTableHeader("🔨 Add a New Project 🔨"));
             System.out.print("🏗️ Enter the name of the project: ");
             String name = scanner.nextLine();
-            System.out.print("📊 Enter project status (INPROGRESS, FINISHED, CANCELLED): ");
-            String status = scanner.nextLine();
-            ProjectStatus projectStatus = ProjectStatus.valueOf(status.toUpperCase());
             System.out.print("📏 Enter the surface area for the project (in sq meters): ");
             double surface = scanner.nextDouble();
             scanner.nextLine();
 
-            Project project = new Project(0, name, 0, 0, projectStatus.name(), surface, selectedClient);
+            Project project = new Project(0, name, 0, 0, ProjectStatus.INPROGRESS.name(), surface, selectedClient);
             Project savedProject = projectService.save(project);
 
             materialMenu.addMaterial(savedProject);
@@ -118,10 +117,32 @@ public class ProjectMenu {
         System.out.println("\n📜 All Projects 📜");
         printTableHeader();
         projects.stream()
-                .distinct() // Ensure no duplicates
+                .distinct()
                 .forEach(this::printProjectRow);
         printTableFooter();
     }
+
+//    public void findAll() {
+//        List<Project> projects = projectService.findAll();
+//        System.out.println("\n📜 All Projects 📜");
+//
+//        Map<Integer, Project> projectMap = new HashMap<>();
+//
+//        for (Project project : projects) {
+//            if (!projectMap.containsKey(project.getId())) {
+//                projectMap.put(project.getId(), project);
+//            } else {
+//                Project existingProject = projectMap.get(project.getId());
+//                project.getComponents().forEach(existingProject::addComponent);
+//            }
+//        }
+//
+//        printTableHeader();
+//
+//        projectMap.values().forEach(this::printProjectRow);
+//
+//        printTableFooter();
+//    }
 
     private void printTableHeader() {
         System.out.println(BLUE);

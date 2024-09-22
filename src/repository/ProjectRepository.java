@@ -16,17 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProjectRepository implements ProjectInterface {
-    private final Connection connection;
-    private final ClientRepository clientRepository;
-    private final ComponentRepository componentRepository;
-    private final MaterialRepository materialRepository;
-    private final WorkForceRepository workForceRepository;
 
-    public ProjectRepository(ClientRepository clientRepository, ComponentRepository componentRepository, MaterialRepository materialRepository, WorkForceRepository workForceRepository) throws SQLException {
-        this.clientRepository = clientRepository;
-        this.componentRepository = componentRepository;
-        this.materialRepository = materialRepository;
-        this.workForceRepository = workForceRepository;
+    private final Connection connection;
+
+    public ProjectRepository() throws SQLException {
         this.connection = Database.getInstance().getConnection();
     }
 
@@ -56,21 +49,30 @@ public class ProjectRepository implements ProjectInterface {
     }
 
 
-
-
-
-
-
     @Override
-    public Optional<Project> findById(int projectId) {
-        String sql = "SELECT * FROM projects WHERE id = ?";
+    public Optional<Project> findById(int id) {
+        String sql = "SELECT\n" +
+                "    p.projectname AS projectName,\n" +
+                "    p.profitmargin AS profitMargin,\n" +
+                "    p.status AS status,\n" +
+                "    p.surface AS surface,\n" +
+                "    p.totalcost AS totalCost,\n" +
+                "    p.id AS id,\n" +
+                "    c.id AS client_id,\n" +
+                "    c.name AS client_name,\n" +
+                "    c.address AS client_address\n" +
+                "FROM projects p\n" +
+                "         JOIN clients c ON c.id = p.client_id\n" +
+                "WHERE p.id = ?;\n";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, projectId);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 Client client = new Client();
                 client.setId(resultSet.getInt("client_id"));
+                client.setName(resultSet.getString("client_name"));
+                client.setAddress(resultSet.getString("client_address"));
                 Project foundProject = new Project(
                         resultSet.getInt("id"),
                         resultSet.getString("projectName"),
@@ -87,6 +89,7 @@ public class ProjectRepository implements ProjectInterface {
         }
         return Optional.empty();
     }
+
 
     @Override
     public List<Project> findAll() {
@@ -118,8 +121,8 @@ public class ProjectRepository implements ProjectInterface {
                 "    projects p\n" +
                 "    LEFT JOIN clients cl ON p.client_id = cl.id\n" +
                 "    LEFT JOIN components comp ON p.id = comp.project_id\n" +
-                "    LEFT JOIN materials ma ON comp.id = ma.component_id\n" +
-                "    LEFT JOIN labor le ON comp.id = le.component_id;";
+                "    LEFT JOIN materials ma ON comp.id = ma.id\n" +
+                "    LEFT JOIN labor le ON comp.id = le.id;";
 
         List<Project> projects = new ArrayList<>();
 
@@ -128,7 +131,6 @@ public class ProjectRepository implements ProjectInterface {
 
             while (resultSet.next()) {
                 int projectId = resultSet.getInt("project_id");
-
 
                 Client client = new Client();
                 client.setId(resultSet.getInt("client_id"));
@@ -149,7 +151,6 @@ public class ProjectRepository implements ProjectInterface {
 
                 projects.add(project);
 
-
                 int componentId = resultSet.getInt("component_id");
 
                 Component component = new Component();
@@ -162,26 +163,26 @@ public class ProjectRepository implements ProjectInterface {
                 project.addComponent(component);
 
                 int materialId = resultSet.getInt("materialId");
-                Material material = new Material();
-                material.setId(materialId);
-                material.setQuantity(resultSet.getDouble("quantity"));
-                material.setTransportCost(resultSet.getDouble("transportCost"));
-                material.setCoefficientQuality(resultSet.getDouble("coefficientQuality"));
-                material.setComponent(component);
+                if (materialId != 0) {
+                    Material material = new Material();
+                    material.setId(materialId);
+                    material.setQuantity(resultSet.getDouble("quantity"));
+                    material.setTransportCost(resultSet.getDouble("transportCost"));
+                    material.setCoefficientQuality(resultSet.getDouble("coefficientQuality"));
 
-                component.addMaterial(material);
-
+                    component.addMaterial(material);
+                }
 
                 int laborId = resultSet.getInt("laborId");
-                WorkForce workForce = new WorkForce();
-                workForce.setId(laborId);
-                workForce.setHourlyCost(resultSet.getDouble("hourlyCost"));
-                workForce.setWorkingHours(resultSet.getInt("workingHours"));
-                workForce.setWorkerProductivity(resultSet.getDouble("workerProductivity"));
-                workForce.setComponent(component);
+                if (laborId != 0) {
+                    WorkForce workForce = new WorkForce();
+                    workForce.setId(laborId);
+                    workForce.setHourlyCost(resultSet.getDouble("hourlyCost"));
+                    workForce.setWorkingHours(resultSet.getInt("workingHours"));
+                    workForce.setWorkerProductivity(resultSet.getDouble("workerProductivity"));
 
-                component.addWorkForce(workForce);
-
+                    component.addWorkForce(workForce);
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving projects: " + e.getMessage());
@@ -189,6 +190,8 @@ public class ProjectRepository implements ProjectInterface {
 
         return projects;
     }
+
+
 
     @Override
     public Project update(Project project) {
@@ -216,11 +219,11 @@ public class ProjectRepository implements ProjectInterface {
     }
 
     @Override
-    public boolean delete(Project project) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM projects WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setInt(1, project.getId());
+            preparedStatement.setInt(1, id);
 
             int result = preparedStatement.executeUpdate();
             if (result == 1) {
@@ -235,8 +238,27 @@ public class ProjectRepository implements ProjectInterface {
         return false;
     }
 
+
+    public boolean updateFields(int projectId, double marginProfit, double totalCost) {
+        String sql = "UPDATE projects SET profitMargin ? , totalCost = ? WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDouble(1, marginProfit);
+            preparedStatement.setDouble(2, totalCost);
+            preparedStatement.setInt(3, projectId);
+            int result = preparedStatement.executeUpdate();
+            if (result == 1) {
+                System.out.println("Project updated successfully");
+            } else {
+                System.out.println("Update failed, project not found");
+            }
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+        return false;
+    }
+
     @Override
-    public Project findProjectByName(String name) {
+    public Project findByName(String name) {
         String sql = "SELECT id , projectName FROM projects WHERE projectName = ?";
         Project project = new Project();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -255,5 +277,39 @@ public class ProjectRepository implements ProjectInterface {
         }
 
         return project;
+    }
+
+    @Override
+    public void updateProject(int id, double marginProfit, double totalCost) {
+        String sql = "UPDATE projects SET profitMargin =? , totalCost = ? WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDouble(1, marginProfit);
+            preparedStatement.setDouble(2, totalCost);
+            preparedStatement.setInt(3, id);
+            int result = preparedStatement.executeUpdate();
+            if (result == 1) {
+                System.out.println("Project updated successfully");
+            } else {
+                System.out.println("Update failed, project not found");
+            }
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateStatus(int id, String status) {
+        String sql = "UPDATE projects SET status = ?::projectStatus  WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, id);
+            int result = preparedStatement.executeUpdate();
+            if (result == 1) {
+                return true;
+            }
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+        return false;
     }
 }

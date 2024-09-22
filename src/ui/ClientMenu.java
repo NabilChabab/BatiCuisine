@@ -2,7 +2,7 @@ package ui;
 
 import domain.entities.Client;
 import exceptions.ClientNotFoundException;
-import service.interfaces.ClientService;
+import service.ClientService;
 
 import java.util.Optional;
 import java.util.Scanner;

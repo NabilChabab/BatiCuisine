@@ -7,21 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientInterface extends CrudInterface<Client> {
-
-    @Override
-    public Client save(Client client);
-
-    @Override
-    public Optional<Client> findById(int client);
-
-    @Override
-    public List<Client> findAll();
-
-    @Override
-    public Client update(Client client);
-
-    @Override
-    public boolean delete(Client client);
-
-    public Optional<Client> findByName(String name);
+    Optional<Client> findByName(String name);
 }

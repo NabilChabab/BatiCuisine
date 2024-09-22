@@ -4,51 +4,42 @@ package service;
 
 import domain.entities.Client;
 import repository.ClientRepository;
-import service.interfaces.ClientService;
 import utils.Validations;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ClientServiceImpl implements ClientService {
+public class ClientService{
 
     private final ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    @Override
     public Client save(Client Client) {
         return this.clientRepository.save(Client);
     }
 
-    @Override
-    public Optional<Client> findById(int Client) {
-        return this.clientRepository.findById(Client);
+    public Optional<Client> findById(int id) {
+        return this.clientRepository.findById(id);
     }
 
-    @Override
     public Client update(Client Client) {
         return this.clientRepository.update(Client);
     }
 
-    @Override
-    public boolean delete(Client Client) {
-        return this.clientRepository.delete(Client);
+    public boolean delete(int id) {
+        return this.clientRepository.delete(id);
     }
 
-    @Override
     public List<Client> findAll() {
         return this.clientRepository.findAll();
     }
 
-
-    @Override
     public Optional<Client> findByName(String name) {
         Validations.ClientByNameValidation(name);
         return this.clientRepository.findByName(name);
     }
-
 
 }

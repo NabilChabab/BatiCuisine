@@ -1,6 +1,5 @@
 import repository.*;
 import service.*;
-import service.interfaces.*;
 import ui.*;
 
 import java.sql.SQLException;
@@ -26,20 +25,22 @@ public class Main {
         ComponentRepository componentRepository = new ComponentRepository();
         WorkForceRepository workForceRepository = new WorkForceRepository(componentRepository);
         MaterialRepository materialRepository = new MaterialRepository(componentRepository);
-        ProjectRepository projectRepository = new ProjectRepository(clientRepository,componentRepository,materialRepository,workForceRepository);
-        ProjectService projectService = new ProjectServiceImpl(projectRepository);
-        ClientService clientService = new ClientServiceImpl(clientRepository);
+        ProjectRepository projectRepository = new ProjectRepository();
+        ProjectService projectService = new ProjectService(projectRepository);
+        ClientService clientService = new ClientService(clientRepository);
         ClientMenu clientMenu = new ClientMenu(clientService);
-        MaterialService materialService = new MaterialServiceImpl(materialRepository);
-        ComponentService componentService = new ComponentServiceImpl(componentRepository);
+
+        MaterialService materialService = new MaterialService(materialRepository , componentRepository);
+        ComponentService componentService = new ComponentService(componentRepository);
         MaterialMenu materialMenu = new MaterialMenu(materialService,componentService);
-        WorkForceService workForceService = new WorkForceServiceImpl(workForceRepository);
+        WorkForceService workForceService = new WorkForceService(workForceRepository , componentRepository);
         WorkForceMenu workForceMenu = new WorkForceMenu(workForceService,componentService);
         ProjectMenu projectMenu = new ProjectMenu(projectService,clientMenu,materialMenu, workForceMenu);
         DevisRepository devisRepository = new DevisRepository();
-        DevisService devisService = new DevisServiceImpl(devisRepository);
+        DevisService devisService = new DevisService(devisRepository);
         DevisMenu devisMenu = new DevisMenu(devisService,projectService);
-        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu , devisMenu);
+        CostMenu costMenu = new CostMenu(projectRepository , componentRepository, materialService , workForceService , devisService, devisMenu);
+        PrincipalMenu principalMenu = new PrincipalMenu(projectMenu , devisMenu , costMenu);
         principalMenu.Menu();
     }
 }

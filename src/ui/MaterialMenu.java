@@ -4,8 +4,9 @@ import domain.entities.Component;
 import domain.entities.Material;
 import domain.entities.Project;
 import domain.enums.ComponentType;
-import service.interfaces.ComponentService;
-import service.interfaces.MaterialService;
+import service.ComponentService;
+import service.MaterialService;
+
 
 import java.util.Scanner;
 
@@ -44,23 +45,16 @@ public class MaterialMenu {
 
             System.out.print("📊 Enter the VAT rate of the material: ");
             double vatRate = scanner.nextDouble();
-            scanner.nextLine();  // Consume newline
+            scanner.nextLine();
 
-            // Create the component and save it
-            Component component = new Component();
-            component.setName(name);
-            component.setComponentType(ComponentType.MATERIAL.name());
-            component.setVatRate(vatRate);
-            component.setProject(project);
-
-            Component savedComponent = componentService.save(component);
-
-            // Create and save the material
-            material = new Material(0, name, "Material", vatRate, project, unitCost, quantity, transportCost, coefficientQuality, savedComponent);
-            materialService.save(material);
-
-            System.out.println("\n✅ Material added successfully!\n");
-            System.out.println(drawMaterialTable(material));
+            material = new Material(0, name, "Material", vatRate, project, unitCost, quantity, transportCost, coefficientQuality);
+            Material savedMaterial = materialService.save(material);
+            if (savedMaterial != null) {
+                System.out.println("\n✅ Material added successfully!\n");
+                System.out.println(drawMaterialTable(material));
+            } else {
+                System.out.println("Error saving material.");
+            }
 
             System.out.print("👉 Would you like to add another material? (y/n): ");
             continueChoice = scanner.nextLine().trim().toLowerCase();

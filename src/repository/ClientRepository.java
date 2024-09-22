@@ -109,11 +109,11 @@ public class ClientRepository implements ClientInterface {
     }
 
     @Override
-    public boolean delete(Client client) {
+    public boolean delete(int id) {
         String query = "DELETE FROM clients WHERE id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, client.getId());
+            preparedStatement.setInt(1, id);
             int result = preparedStatement.executeUpdate();
             if (result == 1) {
                 return true;

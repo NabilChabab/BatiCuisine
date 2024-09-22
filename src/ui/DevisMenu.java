@@ -4,8 +4,9 @@ import domain.entities.Devis;
 import domain.entities.Project;
 import exceptions.DevisNotFoundException;
 import exceptions.ProjectsNotFoundException;
-import service.interfaces.DevisService;
-import service.interfaces.ProjectService;
+import service.DevisService;
+
+import service.ProjectService;
 import utils.DateFormat;
 
 import java.time.LocalDate;
@@ -180,7 +181,7 @@ public class DevisMenu {
     }
 
     public void findDevisByProject(int projectId) {
-        Optional<Devis> devisOptional = this.devisService.findDevisByProject(projectId);
+        Optional<Devis> devisOptional = this.devisService.findDevisByproject(projectId);
 
         devisOptional.ifPresent(devis1 -> {
             System.out.printf("+--------------+-------------------+--------------+--------------+-------------+--------------------+--------------------+%n");

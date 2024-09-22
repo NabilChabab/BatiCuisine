@@ -1,56 +1,50 @@
 package service;
 
-
-
-import domain.entities.Client;
-import domain.entities.Material;
 import domain.entities.Project;
-import domain.entities.WorkForce;
 import repository.*;
-import service.interfaces.ProjectService;
 import utils.Validations;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectService{
     private final ProjectRepository projectRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 
-
-    @Override
     public Project save(Project project) {
         Validations.projectValidation(project);
         return this.projectRepository.save(project);
     }
 
-    @Override
-    public boolean delete(Project project) {
-        return projectRepository.delete(project);
+    public boolean delete(int id) {
+        return projectRepository.delete(id);
     }
 
-    @Override
     public Project update(Project project) {
         return this.projectRepository.update(project);
     }
 
-    @Override
     public List<Project> findAll() {
         return this.projectRepository.findAll();
     }
 
-    @Override
-    public Optional<Project> findById(int project) {
-        return this.projectRepository.findById(project);
+    public Optional<Project> findById(int id) {
+        return this.projectRepository.findById(id);
     }
 
-
-    @Override
     public Project findProjectByName(String name) {
-        return this.projectRepository.findProjectByName(name);
+        return projectRepository.findByName(name);
+    }
+
+    public void updateProjectFields(int projectId , double profitMargin , double totalCost){
+        projectRepository.updateProject(projectId, profitMargin , totalCost);
+    }
+
+    public boolean updateProjectStatus(int projectId , String status){
+        return projectRepository.updateStatus(projectId,status);
     }
 
 

@@ -2,41 +2,40 @@ package service;
 
 import domain.entities.Component;
 import repository.ComponentRepository;
-import service.interfaces.ComponentService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ComponentServiceImpl implements ComponentService {
+public class ComponentService{
 
     private final ComponentRepository componentRepository;
-    public ComponentServiceImpl(ComponentRepository componentRepository) {
+
+    public ComponentService(ComponentRepository componentRepository) {
         this.componentRepository = componentRepository;
     }
 
-    @Override
     public Component save(Component component) {
         return this.componentRepository.save(component);
     }
 
 
-    @Override
-    public Optional<Component> findById(int component) {
-        return Optional.empty();
+    public Optional<Component> findById(int id) {
+        return componentRepository.findById(id);
     }
 
-    @Override
+
     public List<Component> findAll() {
-        return List.of();
+        return componentRepository.findAll();
     }
 
-    @Override
+
     public Component update(Component component) {
-        return null;
+        return componentRepository.update(component);
     }
 
-    @Override
-    public boolean delete(Component component) {
-        return false;
+
+    public boolean delete(int id) {
+        return componentRepository.delete(id);
     }
+
 }
