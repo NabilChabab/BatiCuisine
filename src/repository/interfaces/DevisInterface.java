@@ -2,7 +2,6 @@ package repository.interfaces;
 
 import domain.entities.Devis;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface DevisInterface extends CrudInterface<Devis> {
