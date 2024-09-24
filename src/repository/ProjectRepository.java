@@ -60,7 +60,8 @@ public class ProjectRepository implements ProjectInterface {
                 "    p.id AS id,\n" +
                 "    c.id AS client_id,\n" +
                 "    c.name AS client_name,\n" +
-                "    c.address AS client_address\n" +
+                "    c.address AS client_address,\n" +
+                "    c.isprofessional AS client_isprofessional\n" +
                 "FROM projects p\n" +
                 "         JOIN clients c ON c.id = p.client_id\n" +
                 "WHERE p.id = ?;\n";
@@ -73,6 +74,7 @@ public class ProjectRepository implements ProjectInterface {
                 client.setId(resultSet.getInt("client_id"));
                 client.setName(resultSet.getString("client_name"));
                 client.setAddress(resultSet.getString("client_address"));
+                client.setProfessional(resultSet.getBoolean("client_isprofessional"));
                 Project foundProject = new Project(
                         resultSet.getInt("id"),
                         resultSet.getString("projectName"),
