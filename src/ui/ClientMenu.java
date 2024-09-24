@@ -83,11 +83,10 @@ public class ClientMenu {
         System.out.print("📛 Enter the name for the client: ");
         String name = scanner.nextLine();
 
-        // Check if client with the same name already exists
         Optional<Client> existingClient = clientService.findByName(name);
         if (existingClient.isPresent()) {
             System.out.println("\n❌ A client with the name '" + name + "' already exists.");
-            return null; // Exit the method without adding the client
+            return null;
         }
 
         System.out.print("🏠 Enter the address for the client: ");
@@ -144,7 +143,7 @@ public class ClientMenu {
             String phoneNumber = scanner.nextLine();
             System.out.print("🛠️ Is the client professional? (true/false): ");
             boolean status = scanner.nextBoolean();
-            scanner.nextLine();  // Consume the newline
+            scanner.nextLine();
 
             client.setName(name);
             client.setAddress(address);
@@ -186,24 +185,20 @@ public class ClientMenu {
         }
     }
 
-    // Helper method to draw a simple table header
     private String drawTableHeader(String title) {
         return "+---------------------------------------------+\n" +
                 "| " + String.format("%-43s", title) + "|\n" +
                 "+---------------------------------------------+";
     }
 
-    // Helper method to draw a table row
     private String drawTableRow(String content) {
         return "| " + String.format("%-43s", content) + " |";
     }
 
-    // Helper method to close the table
     private String drawTableFooter() {
         return "+---------------------------------------------+";
     }
 
-    // Method to display client information in a table format
     private String drawClientTable(Client client) {
         return drawTableHeader("👤 Client Information") + "\n" +
                 drawTableRow("📛 Name: " + client.getName()) + "\n" +
