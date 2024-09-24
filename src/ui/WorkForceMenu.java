@@ -1,9 +1,7 @@
 package ui;
 
-import domain.entities.Component;
 import domain.entities.Project;
 import domain.entities.WorkForce;
-import domain.enums.ComponentType;
 import service.ComponentService;
 import service.WorkForceService;
 
