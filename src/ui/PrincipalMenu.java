@@ -73,18 +73,18 @@ public class PrincipalMenu {
 
     // Helper method to draw a simple table header for better presentation
     private String drawTableHeader(String title) {
-        return "+---------------------------------------------+\n" +
-                "| " + String.format("%-43s", title) + "|\n" +
-                "+---------------------------------------------+";
+        return "+--------------------------------------------------------------+\n" +
+                "| " + String.format("%-43s", title) + "                   |\n" +
+                "+--------------------------------------------------------------+";
     }
 
     // Helper method to draw a row inside the table
     private String drawTableRow(String content) {
-        return "| " + String.format("%-43s", content) + " |";
+        return "| " + String.format("%-60s", content) + "|";
     }
 
     // Helper method to close the table after rows
     private String drawTableFooter() {
-        return "+---------------------------------------------+";
+        return "+--------------------------------------------------------------+";
     }
 }
