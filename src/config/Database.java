@@ -14,6 +14,10 @@ public class Database {
     private static final String USER = System.getenv("DATABASE_USERNAME");
     private static final String PASSWORD = System.getenv("DATABASE_PASSWORD");
 
+//    private static final String URL = "jdbc:postgresql://localhost:5432/bati_cuisine";
+//    private static final String USER = "BatiCuisine";
+//    private static final String PASSWORD = "1234";
+
     private static Database instance;
     private Connection connection;
 
