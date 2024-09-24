@@ -28,7 +28,7 @@ public class CostMenu {
     private final WorkForceService workForceService;
     private final DevisService devisService;
     private final DevisMenu devisMenu;
-    private final double discount = 0.7;
+
 
     public CostMenu(ProjectRepository projectRepository, ComponentRepository componentRepository, MaterialService materialService, WorkForceService workForceService, DevisService devisService, DevisMenu devisMenu) {
         this.devisService = devisService;
@@ -111,9 +111,16 @@ public class CostMenu {
         System.out.println("Workforce Cost After VAT: " + String.format("%.2f", totalWorkforceAfterVat) + " €");
         System.out.println("Total Cost Before Margin: " + String.format("%.2f", totalCostBeforeMargin) + " €");
 
-
+        double discount = 0.0;
         if (project.getClient().isProfessional()) {
             System.out.println("\n--- Professional Client Discount Applied ---");
+            System.out.println("Enter discount percentage: ");
+            discount = scanner.nextDouble();
+            scanner.nextLine();
+            if (discount < 0 || discount > 100) {
+                System.out.println("Invalid discount percentage. Please enter a value between 0 and 100.");
+                return;
+            }
             totalCost *= discount;
             System.out.println("Discounted Total Cost: " + String.format("%.2f", totalCost) + " €");
         }
